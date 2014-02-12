@@ -13,9 +13,9 @@ dnl [  --with-geohash             Include geohash support])
 
 dnl Otherwise use enable:
 
-dnl PHP_ARG_ENABLE(geohash, whether to enable geohash support,
-dnl Make sure that the comment is aligned:
-dnl [  --enable-geohash           Enable geohash support])
+PHP_ARG_ENABLE(geohash, whether to enable geohash support,
+Make sure that the comment is aligned:
+[  --enable-geohash           Enable geohash support])
 
 if test "$PHP_GEOHASH" != "no"; then
   dnl Write more examples of tests here...
