@@ -7,14 +7,16 @@ php geohash extension  (php geohash 扩展)
 编译
 ======
 
-git clone 到机器
+	git clone 到机器
+    
+    执行：
+	phpize
+	./configure
+	make
+	make install
 
-phpizo
-./configure
-make
-make install
-
-然后把 geohash.so 加入到php.ini中
+	然后把 geohash.so 加入到php.ini中
+	
 
 方法
 ====
@@ -46,4 +48,5 @@ make install
 	/**
 	 *  $hash    //geohash_encode后的值
 	 *  返回 在$hash 8个 (东南西北各二个)附近的hash值
+	 */
 	geohash_neighbors($hash);
