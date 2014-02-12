@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("geohash", "for geohash support", "no");
+
+// Otherwise, use ARG_ENABLE
+// ARG_ENABLE("geohash", "enable geohash support", "no");
+
+if (PHP_GEOHASH != "no") {
+	EXTENSION("geohash", "geohash.c");
+}
+
