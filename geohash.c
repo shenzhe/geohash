@@ -192,6 +192,17 @@ PHP_FUNCTION(geohash_encode)
 	}
 
 
+    if(latitude>90.0 || latitude<-90.0){
+        php_error_docref(NULL TSRMLS_CC, E_NOTICE, "latitude range -90.0 to 90.0, now: %f", latitude);
+        RETURN_NULL();
+    }
+
+    if(longitude>180.0 || longitude<-180.0){
+        php_error_docref(NULL TSRMLS_CC, E_NOTICE, "longitude range -180.0 to 180.0, now: %f", longitude);
+        RETURN_NULL();
+    }
+
+
 	RETURN_STRING(_geohash_encode(latitude, longitude, precision), 1);
 }
 
