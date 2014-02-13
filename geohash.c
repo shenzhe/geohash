@@ -52,7 +52,7 @@ static char* get_neighbor(char *hash, int direction);
 static char* _geohash_encode(double lat, double lng, long precision);
 static GeoCoord _geohash_decode(char *hash);
 static char** _geohash_neighbors(char *hash);
-static GeoBoxDimension geohash_dimensions_for_precision(int precision);
+static GeoBoxDimension geohash_dimensions_for_precision(long precision);
 
 /* If you declare any globals in php_geohash.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(geohash)
@@ -68,7 +68,8 @@ static int le_geohash;
 const zend_function_entry geohash_functions[] = {
 	PHP_FE(geohash_encode,	NULL)		
 	PHP_FE(geohash_decode,	NULL)	
-    PHP_FE(geohash_neighbors,  NULL)	
+    PHP_FE(geohash_neighbors,  NULL)   
+    PHP_FE(geohash_dimension,  NULL)   
 	PHP_FE_END	/* Must be the last line in geohash_functions[] */
 };
 /* }}} */
@@ -227,6 +228,7 @@ PHP_FUNCTION(geohash_decode)
 
 }
 
+
 PHP_FUNCTION(geohash_neighbors)
 {
     char *hash;
@@ -247,6 +249,22 @@ PHP_FUNCTION(geohash_neighbors)
     }
 
     free(list);
+
+}
+
+PHP_FUNCTION(geohash_dimension)
+{
+    long precision;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &precision) == FAILURE) {
+            return;
+    }
+    
+    GeoBoxDimension dimension =  geohash_dimensions_for_precision(precision);
+
+    array_init(return_value);
+    add_assoc_double(return_value,"width", dimension.width);
+    add_assoc_double(return_value,"height", dimension.height);
 
 }
 
@@ -447,7 +465,7 @@ _geohash_neighbors(char *hash)
 }
 
 static GeoBoxDimension 
-geohash_dimensions_for_precision(int precision) 
+geohash_dimensions_for_precision(long precision) 
 {
     
     GeoBoxDimension dimensions = {0.0, 0.0};

@@ -24,7 +24,7 @@
 extern zend_module_entry geohash_module_entry;
 #define phpext_geohash_ptr &geohash_module_entry
 
-#define PHP_GEOHASH_VERSION "1.0" /* Replace with version number for your extension */
+#define PHP_GEOHASH_VERSION "1.1" /* Replace with version number for your extension */
 
 #ifdef PHP_WIN32
 #	define PHP_GEOHASH_API __declspec(dllexport)
@@ -89,6 +89,7 @@ PHP_MINFO_FUNCTION(geohash);
 PHP_FUNCTION(geohash_encode);	
 PHP_FUNCTION(geohash_decode);	
 PHP_FUNCTION(geohash_neighbors); 
+PHP_FUNCTION(geohash_dimension); 
 
 /* 
   	Declare any global variables you may need between the BEGIN

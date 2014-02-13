@@ -5,3 +5,7 @@
     print_r($arr);
     $neighbors = geohash_neighbors($hash);
     var_dump($neighbors);
+
+    var_dump(geohash_dimension(12));
+
+    var_dump(geohash_dimension(10));
