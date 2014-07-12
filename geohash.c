@@ -245,11 +245,10 @@ PHP_FUNCTION(geohash_neighbors)
     int i;
     array_init(return_value);
     for(i=0; i<len; i++) {
-        add_next_index_string(return_value, list[i], 0);
+        add_next_index_string(return_value, list[i], 1);
+        efree(list[i]);
     }
-
-    free(list);
-
+    efree(list);
 }
 
 PHP_FUNCTION(geohash_dimension)
@@ -300,7 +299,7 @@ get_neighbor(char *hash, int direction)
     char **border = is_odd ? odd_borders : even_borders;
     char **neighbor = is_odd ? odd_neighbors : even_neighbors; 
     
-    char *base = malloc(sizeof(char) * 1);
+    char *base = emalloc(sizeof(char) * 1);
     base[0] = '\0';
     strncat(base, hash, hash_length - 1);
     
@@ -310,11 +309,11 @@ get_neighbor(char *hash, int direction)
     int neighbor_index = index_for_char(last_char, neighbor[direction]);
     last_char = char_map[neighbor_index];
         
-    char *last_hash = malloc(sizeof(char) * 2);
+    char *last_hash = emalloc(sizeof(char) * 2);
     last_hash[0] = last_char;
     last_hash[1] = '\0';
     strcat(base, last_hash);
-    free(last_hash);
+    efree(last_hash);
     
     return base;
 }
@@ -448,7 +447,7 @@ _geohash_neighbors(char *hash)
     if(hash) {
         
         // N, NE, E, SE, S, SW, W, NW
-        neighbors = (char**)malloc(sizeof(char*) * 8);
+        neighbors = (char**)emalloc(sizeof(char*) * 8);
         
         neighbors[0] = get_neighbor(hash, NORTH);
         neighbors[1] = get_neighbor(neighbors[0], EAST);
@@ -460,7 +459,6 @@ _geohash_neighbors(char *hash)
         neighbors[7] = get_neighbor(neighbors[6], NORTH);        
 
     }
-    
     return neighbors;
 }
 
