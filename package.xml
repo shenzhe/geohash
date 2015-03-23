@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package
+ packagerversion="1.4.11"
+ version="2.0"
+ xmlns="http://pear.php.net/dtd/package-2.0"
+ xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+http://pear.php.net/dtd/tasks-1.0.xsd
+http://pear.php.net/dtd/package-2.0
+http://pear.php.net/dtd/package-2.0.xsd">
+	<name>geohash</name>
+	<channel>pecl.php.net</channel>
+	<summary>GEOHASH for PHP.</summary>
+	<description>geohash for php
+	</description>
+	<lead>
+		<name>shenzhe</name>
+		<user>shenzhe</user>
+		<email>shenzhe163@gmail.com</email>
+		<active>yes</active>
+	</lead>
+	<date>2015-03-23</date>
+	<time>17:08:23</time>
+	<version>
+		<release>1.1</release>
+		<api>1.1</api>
+	</version>
+	<stability>
+		<release>stable</release>
+		<api>stable</api>
+	</stability>
+	<license uri="http://mit-license.org/">MIT</license>
+	<notes>Initial release to PECL</notes>
+	<contents>
+		<dir name="/">
+			<file role="doc" name="CREDITS" />
+			<file role="doc" name="LICENSE.md" />
+			<file role="doc" name="README.md" />
+			<file role="src" name="config.m4" />
+			<file role="src" name="config.w32" />
+			<file role="src" name="php_geohash.h" />
+			<file role="src" name="geohash.c" />
+			<file role="src" name="example.php" />
+			<file role="src" name="geohash.php" />
+			<dir name="tests">
+				<file role="test" name="001.phpt" />
+			</dir>
+		</dir>
+	</contents>
+	<dependencies>
+		<required>
+			<php>
+				<min>5.0</min>
+			</php>
+			<pearinstaller>
+				<min>1.4.0</min>
+			</pearinstaller>
+		</required>
+	</dependencies>
+	<providesextension>geohash</providesextension>
+	<extsrcrelease>
+		<configureoption default="yes" name="enable-geohash" prompt="whether to enable geohash support" />
+	</extsrcrelease>
+</package>
