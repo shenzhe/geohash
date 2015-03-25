@@ -223,7 +223,7 @@ PHP_FUNCTION(geohash_decode)
     add_assoc_double(return_value,"longitude",area.longitude);
     add_assoc_double(return_value,"north",area.north);
     add_assoc_double(return_value,"east",area.east);
-    add_assoc_double(return_value,"south",area.longitude);
+    add_assoc_double(return_value,"south",area.south);
     add_assoc_double(return_value,"west",area.west);
 
 }
