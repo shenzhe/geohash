@@ -45,6 +45,8 @@ extern zend_module_entry geohash_module_entry;
 #define MAX_LONG            180.0
 #define MIN_LONG            -180.0
 
+#define MAX_HASH_LENGTH 22
+
 #define NORTH               0
 #define EAST                1
 #define SOUTH               2

@@ -27,6 +27,17 @@
 #include "ext/standard/info.h"
 #include "php_geohash.h"
 
+#define SET_BIT(bits, mid, range, value, offset) \
+mid = ((range)->high + (range)->low) / 2.0; \
+if ((value) >= mid) { \
+    (range)->low = mid; \
+    (bits) |= (0x1 << (offset)); \
+} else { \
+    (range)->high = mid; \
+    (bits) |= (0x0 << (offset)); \
+}
+
+
 static char char_map[32] =  "0123456789bcdefghjkmnpqrstuvwxyz";
 
 /*
@@ -66,11 +77,11 @@ static int le_geohash;
  * Every user visible function must have an entry in geohash_functions[].
  */
 const zend_function_entry geohash_functions[] = {
-	PHP_FE(geohash_encode,	NULL)		
-	PHP_FE(geohash_decode,	NULL)	
+    PHP_FE(geohash_encode,  NULL)       
+    PHP_FE(geohash_decode,  NULL)   
     PHP_FE(geohash_neighbors,  NULL)   
     PHP_FE(geohash_dimension,  NULL)   
-	PHP_FE_END	/* Must be the last line in geohash_functions[] */
+    PHP_FE_END  /* Must be the last line in geohash_functions[] */
 };
 /* }}} */
 
@@ -78,19 +89,19 @@ const zend_function_entry geohash_functions[] = {
  */
 zend_module_entry geohash_module_entry = {
 #if ZEND_MODULE_API_NO >= 20010901
-	STANDARD_MODULE_HEADER,
+    STANDARD_MODULE_HEADER,
 #endif
-	"geohash",
-	geohash_functions,
-	PHP_MINIT(geohash),
-	PHP_MSHUTDOWN(geohash),
-	PHP_RINIT(geohash),		/* Replace with NULL if there's nothing to do at request start */
-	PHP_RSHUTDOWN(geohash),	/* Replace with NULL if there's nothing to do at request end */
-	PHP_MINFO(geohash),
+    "geohash",
+    geohash_functions,
+    PHP_MINIT(geohash),
+    PHP_MSHUTDOWN(geohash),
+    PHP_RINIT(geohash),     /* Replace with NULL if there's nothing to do at request start */
+    PHP_RSHUTDOWN(geohash), /* Replace with NULL if there's nothing to do at request end */
+    PHP_MINFO(geohash),
 #if ZEND_MODULE_API_NO >= 20010901
-	PHP_GEOHASH_VERSION,
+    PHP_GEOHASH_VERSION,
 #endif
-	STANDARD_MODULE_PROPERTIES
+    STANDARD_MODULE_PROPERTIES
 };
 /* }}} */
 
@@ -113,8 +124,8 @@ PHP_INI_END()
 /* Uncomment this function if you have INI entries
 static void php_geohash_init_globals(zend_geohash_globals *geohash_globals)
 {
-	geohash_globals->global_value = 0;
-	geohash_globals->global_string = NULL;
+    geohash_globals->global_value = 0;
+    geohash_globals->global_string = NULL;
 }
 */
 /* }}} */
@@ -123,10 +134,10 @@ static void php_geohash_init_globals(zend_geohash_globals *geohash_globals)
  */
 PHP_MINIT_FUNCTION(geohash)
 {
-	/* If you have INI entries, uncomment these lines 
-	REGISTER_INI_ENTRIES();
-	*/
-	return SUCCESS;
+    /* If you have INI entries, uncomment these lines 
+    REGISTER_INI_ENTRIES();
+    */
+    return SUCCESS;
 }
 /* }}} */
 
@@ -134,10 +145,10 @@ PHP_MINIT_FUNCTION(geohash)
  */
 PHP_MSHUTDOWN_FUNCTION(geohash)
 {
-	/* uncomment this line if you have INI entries
-	UNREGISTER_INI_ENTRIES();
-	*/
-	return SUCCESS;
+    /* uncomment this line if you have INI entries
+    UNREGISTER_INI_ENTRIES();
+    */
+    return SUCCESS;
 }
 /* }}} */
 
@@ -146,7 +157,7 @@ PHP_MSHUTDOWN_FUNCTION(geohash)
  */
 PHP_RINIT_FUNCTION(geohash)
 {
-	return SUCCESS;
+    return SUCCESS;
 }
 /* }}} */
 
@@ -155,7 +166,7 @@ PHP_RINIT_FUNCTION(geohash)
  */
 PHP_RSHUTDOWN_FUNCTION(geohash)
 {
-	return SUCCESS;
+    return SUCCESS;
 }
 /* }}} */
 
@@ -163,15 +174,15 @@ PHP_RSHUTDOWN_FUNCTION(geohash)
  */
 PHP_MINFO_FUNCTION(geohash)
 {
-	php_info_print_table_start();
-	php_info_print_table_header(2, "geohash support", "enabled");
+    php_info_print_table_start();
+    php_info_print_table_header(2, "geohash support", "enabled");
     php_info_print_table_row(2, "Version", PHP_GEOHASH_VERSION);
-	php_info_print_table_row(2, "Author", "shenzhe[shenzhe163@gmail.com]");
-	php_info_print_table_end();
+    php_info_print_table_row(2, "Author", "shenzhe[shenzhe163@gmail.com]");
+    php_info_print_table_end();
 
-	/* Remove comments if you have entries in php.ini
-	DISPLAY_INI_ENTRIES();
-	*/
+    /* Remove comments if you have entries in php.ini
+    DISPLAY_INI_ENTRIES();
+    */
 }
 /* }}} */
 
@@ -188,9 +199,9 @@ PHP_FUNCTION(geohash_encode)
     double latitude, longitude;
     long precision = 12;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &latitude, &longitude, &precision) == FAILURE) {
-		return;
-	}
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &latitude, &longitude, &precision) == FAILURE) {
+        return;
+    }
 
 
     if(latitude>90.0 || latitude<-90.0){
@@ -203,8 +214,12 @@ PHP_FUNCTION(geohash_encode)
         RETURN_NULL();
     }
 
+    char *hash;
+    hash = _geohash_encode(latitude, longitude, precision);
 
-	RETURN_STRING(_geohash_encode(latitude, longitude, precision), 1);
+    RETURN_STRING(hash, 0);
+
+    efree(hash);
 }
 
 PHP_FUNCTION(geohash_decode)
@@ -318,65 +333,52 @@ get_neighbor(char *hash, int direction)
     return base;
 }
 
-static char* 
-_geohash_encode(double lat, double lng, long precision) 
+static char*
+_geohash_encode(double lat, double lon, long len)
 {
-    
-    if(precision < 1 || precision > 12)
-        precision = 12;
-    
-    char* hash = "";
-    
-    if(lat <= 90.0 && lat >= -90.0 && lng <= 180.0 && lng >= -180.0) {
-        
-        
-        precision *= 5.0;
-        
-        Interval lat_interval = {MAX_LAT, MIN_LAT};
-        Interval lng_interval = {MAX_LONG, MIN_LONG};
+    unsigned int i;
+    char *hash;
+    unsigned char bits = 0;
+    double mid;
+    Interval lat_range = {  90,  -90 };
+    Interval lon_range = { 180, -180 };
 
-        Interval *interval;
-        double coord, mid;
-        int is_even = 1;
-        unsigned int hashChar = 0;
-        int i;
-        for(i = 1; i <= precision; i++) {
-         
-            if(is_even) {
-            
-                interval = &lng_interval;
-                coord = lng;                
-                
-            } else {
-                
-                interval = &lat_interval;
-                coord = lat;   
-            }
-            
-            mid = (interval->low + interval->high) / 2.0;
-            hashChar = hashChar << 1;
-            
-            if(coord > mid) {
-                
-                interval->low = mid;
-                hashChar |= 0x01;
-                
-            } else
-                interval->high = mid;
-            
-            if(!(i % 5)) {
-                
-                spprintf(&hash, 0, "%s%c",hash, char_map[hashChar]);
-                hashChar = 0;
+    double val1, val2, val_tmp;
+    Interval *range1, *range2, *range_tmp;
 
-            }
-            
-            is_even = !is_even;
-        }
-     
-        
+    assert(lat >= -90.0);
+    assert(lat <= 90.0);
+    assert(lon >= -180.0);
+    assert(lon <= 180.0);
+    assert(len <= MAX_HASH_LENGTH);
+
+    hash = (char *)emalloc(sizeof(char) * (len + 1));
+    if (hash == NULL)
+        return NULL;
+
+    val1 = lon; range1 = &lon_range;
+    val2 = lat; range2 = &lat_range;
+
+    for (i=0; i < len; i++) {
+
+        bits = 0;
+        SET_BIT(bits, mid, range1, val1, 4);
+        SET_BIT(bits, mid, range2, val2, 3);
+        SET_BIT(bits, mid, range1, val1, 2);
+        SET_BIT(bits, mid, range2, val2, 1);
+        SET_BIT(bits, mid, range1, val1, 0);
+
+        hash[i] = char_map[bits];
+
+        val_tmp   = val1;
+        val1      = val2;
+        val2      = val_tmp;
+        range_tmp = range1;
+        range1    = range2;
+        range2    = range_tmp;
     }
-    
+
+    hash[len] = '\0';
     return hash;
 }
 
@@ -507,3 +509,4 @@ geohash_dimensions_for_precision(long precision)
  * vim600: noet sw=4 ts=4 fdm=marker
  * vim<600: noet sw=4 ts=4
  */
+
