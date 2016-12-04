@@ -314,7 +314,7 @@ get_neighbor(char *hash, int direction)
     char **border = is_odd ? odd_borders : even_borders;
     char **neighbor = is_odd ? odd_neighbors : even_neighbors; 
     
-    char *base = emalloc(sizeof(char) * 1);
+    char *base = emalloc(sizeof(char) * (hash_length + 1));
     base[0] = '\0';
     strncat(base, hash, hash_length - 1);
     
