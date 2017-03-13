@@ -216,8 +216,11 @@ PHP_FUNCTION(geohash_encode)
 
     char *hash;
     hash = _geohash_encode(latitude, longitude, precision);
-
+    #if PHP_MAJOR_VERSION < 7
     RETURN_STRING(hash, 0);
+    #else
+    RETURN_STRING(hash);
+    #endif 
 
     efree(hash);
 }
@@ -225,7 +228,7 @@ PHP_FUNCTION(geohash_encode)
 PHP_FUNCTION(geohash_decode)
 {
     char *hash;
-    int hash_len;
+    long hash_len;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &hash, &hash_len) == FAILURE) {
             return;
@@ -247,7 +250,7 @@ PHP_FUNCTION(geohash_decode)
 PHP_FUNCTION(geohash_neighbors)
 {
     char *hash;
-    int hash_len;
+    long hash_len;
 
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &hash, &hash_len) == FAILURE) {
             return;
@@ -260,7 +263,11 @@ PHP_FUNCTION(geohash_neighbors)
     int i;
     array_init(return_value);
     for(i=0; i<len; i++) {
+        #if PHP_MAJOR_VERSION < 7
         add_next_index_string(return_value, list[i], 1);
+	#else
+        add_next_index_string(return_value, list[i]);
+        #endif	
         efree(list[i]);
     }
     efree(list);
