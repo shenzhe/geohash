@@ -7,4 +7,4 @@
 
     var_dump(geohash_dimension(12));
 
-    var_dump(geohash_dimension(10));
+    var_dump(geohash_dimension(5));

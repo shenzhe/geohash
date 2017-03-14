@@ -47,7 +47,12 @@ php geohash extension  (php geohash 扩展)
 
 	/**
 	 *  $hash    //geohash_encode后的值
-	 *  返回 在$hash 8个 (东南西北各二个)附近的hash值
+	 *  返回 在$hash 8个方向的hash值 （顺序：N, NE, E, SE, S, SW, W, NW）
+	  NW N NE
+            \|/
+          W - - E
+            /|\
+          SW S SE
 	 */
 	geohash_neighbors($hash);
 
@@ -56,4 +61,4 @@ php geohash extension  (php geohash 扩展)
 	 *  返回 数组，array("width"=>12.0, "height"=>12.0) 
 	 *  表示矩形的宽和高
 	 */
-	geohash_dimension($hash);
+	geohash_dimension($precision);
