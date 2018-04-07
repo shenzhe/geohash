@@ -325,8 +325,11 @@ get_neighbor(char *hash, int direction)
     base[0] = '\0';
     strncat(base, hash, hash_length - 1);
     
-    if(index_for_char(last_char, border[direction]) != -1)
-        base = get_neighbor(base, direction);
+    if(index_for_char(last_char, border[direction]) != -1){
+        char *base_temp = get_neighbor(base, direction);
+        strcpy( base, base_temp );
+        efree( base_temp );
+    }
     
     int neighbor_index = index_for_char(last_char, neighbor[direction]);
     last_char = char_map[neighbor_index];
